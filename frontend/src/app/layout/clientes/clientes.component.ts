@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- Importamos ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../services/cliente.service';
@@ -17,39 +17,37 @@ export class ClientesComponent implements OnInit {
   // Formulario Crear
   mostrarFormulario = false;
   nuevoNombre = '';
+  nuevoCorreo = '';
+  nuevoTelefono = '';
 
   // Formulario Editar
   mostrarFormularioEdicion = false;
   clienteEditandoId: number | null = null;
   editNombre = '';
+  editCorreo = '';
+  editTelefono = '';
   editEstado = '';
 
   constructor(
     private clienteService: ClienteService,
-    private cdr: ChangeDetectorRef // <-- Lo inyectamos aquí
+    private cdr: ChangeDetectorRef 
   ) {}
 
-  // ¡ESTA ES LA LLAVE! Se ejecuta apenas entras a la pantalla
   ngOnInit() {
-    console.log('1. Entrando a la pantalla de clientes...');
     this.cargarClientes();
   }
 
   cargarClientes() {
     this.cargando = true;
-    console.log('2. Pidiendo clientes al backend...');
     
     this.clienteService.obtenerClientes().subscribe({
       next: (data) => {
-        console.log('3. Datos recibidos:', data);
         this.clientes = data;
         this.cargando = false;
-        
-        // Obligamos a Angular a "repintar" la pantalla inmediatamente
         this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Error al cargar clientes desde OnInit:', err);
+        console.error('Error al cargar clientes:', err);
         this.cargando = false;
         this.cdr.detectChanges();
       }
@@ -61,6 +59,8 @@ export class ClientesComponent implements OnInit {
     this.mostrarFormulario = !this.mostrarFormulario;
     this.mostrarFormularioEdicion = false; 
     this.nuevoNombre = ''; 
+    this.nuevoCorreo = '';
+    this.nuevoTelefono = '';
   }
 
   guardarCliente() {
@@ -69,7 +69,13 @@ export class ClientesComponent implements OnInit {
       return;
     }
 
-    this.clienteService.crearCliente({ nombre: this.nuevoNombre }).subscribe({
+    const nuevoCliente = {
+      nombre: this.nuevoNombre,
+      correo: this.nuevoCorreo || undefined,
+      telefono: this.nuevoTelefono || undefined
+    };
+
+    this.clienteService.crearCliente(nuevoCliente).subscribe({
       next: () => {
         this.toggleFormulario(); 
         this.cargarClientes();   
@@ -87,6 +93,8 @@ export class ClientesComponent implements OnInit {
     this.mostrarFormulario = false; 
     this.clienteEditandoId = cliente.id;
     this.editNombre = cliente.nombre;
+    this.editCorreo = cliente.correo || '';
+    this.editTelefono = cliente.telefono || '';
     this.editEstado = cliente.estado;
   }
 
@@ -103,6 +111,8 @@ export class ClientesComponent implements OnInit {
 
     const datosActualizados = {
       nombre: this.editNombre,
+      correo: this.editCorreo || undefined,
+      telefono: this.editTelefono || undefined,
       estado: this.editEstado
     };
 

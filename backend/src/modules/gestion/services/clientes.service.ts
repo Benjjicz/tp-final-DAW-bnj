@@ -19,7 +19,12 @@ export class ClientesService {
       throw new ConflictException(`El cliente '${dto.nombre}' ya está registrado.`);
     }
 
-    const cliente = this.clienteRepo.create({ nombre: dto.nombre, estado: EstadosClientesEnum.ACTIVO });
+    const cliente = this.clienteRepo.create({ 
+      nombre: dto.nombre, 
+      correo: dto.correo,
+      telefono: dto.telefono,
+      estado: EstadosClientesEnum.ACTIVO 
+    });
     const guardado = await this.clienteRepo.save(cliente);
     return { id: guardado.id };
   }
@@ -47,6 +52,9 @@ export class ClientesService {
 
     if (dto.nombre) cliente.nombre = dto.nombre;
     if (dto.estado) cliente.estado = dto.estado;
+    // Actualización de datos de contacto
+    if (dto.correo !== undefined) cliente.correo = dto.correo;
+    if (dto.telefono !== undefined) cliente.telefono = dto.telefono;
 
     try {
       await this.clienteRepo.save(cliente);

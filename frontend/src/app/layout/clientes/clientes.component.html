@@ -12,6 +12,14 @@
       <label>Nombre del Cliente:</label>
       <input type="text" [(ngModel)]="nuevoNombre" placeholder="Ej: Juan Pérez">
     </div>
+    <div class="form-group">
+      <label>Correo Electrónico:</label>
+      <input type="email" [(ngModel)]="nuevoCorreo" placeholder="Ej: juan@empresa.com">
+    </div>
+    <div class="form-group">
+      <label>Teléfono:</label>
+      <input type="text" [(ngModel)]="nuevoTelefono" placeholder="Ej: +54 291 1234567">
+    </div>
     <div class="form-actions">
       <button class="btn-guardar" (click)="guardarCliente()"><span class="material-symbols-outlined">save</span> Guardar</button>
       <button class="btn-cancelar" (click)="toggleFormulario()"><span class="material-symbols-outlined">close</span> Cancelar</button>
@@ -23,6 +31,14 @@
     <div class="form-group">
       <label>Nombre:</label>
       <input type="text" [(ngModel)]="editNombre">
+    </div>
+    <div class="form-group">
+      <label>Correo Electrónico:</label>
+      <input type="email" [(ngModel)]="editCorreo">
+    </div>
+    <div class="form-group">
+      <label>Teléfono:</label>
+      <input type="text" [(ngModel)]="editTelefono">
     </div>
     <div class="form-group">
       <label>Estado:</label>
@@ -44,6 +60,8 @@
       <tr>
         <th>ID</th>
         <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
         <th>Estado</th>
         <th>Acciones</th>
       </tr>
@@ -52,6 +70,8 @@
       <tr *ngFor="let cliente of clientes">
         <td>{{ cliente.id }}</td>
         <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.correo || '-' }}</td>
+        <td>{{ cliente.telefono || '-' }}</td>
         <td>
           <span class="badge" [ngClass]="{
             'badge-activo': cliente.estado === 'ACTIVO', 
@@ -67,7 +87,7 @@
         </td>
       </tr>
       <tr *ngIf="clientes.length === 0">
-        <td colspan="4" style="text-align: center; padding: 20px;">No hay clientes registrados.</td>
+        <td colspan="6" style="text-align: center; padding: 20px;">No hay clientes registrados.</td>
       </tr>
     </tbody>
   </table>
